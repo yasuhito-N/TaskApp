@@ -27,11 +27,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
     
     
-    
-    // MARK: UITableViewDataSourceプロトコルのメソッド
-    // データの数（＝セルの数）を返すメソッド
+//     MARK: UITableViewDataSourceプロトコルのメソッド
+//     データの数（＝セルの数）を返すメソッド
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return taskArray.count
     }
@@ -68,11 +68,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // Delete ボタンが押された時に呼ばれるメソッド
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        try! realm.write {
-            self.realm.delete(self.taskArray[indexPath.row])
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        }
-        
+        if editingStyle == UITableViewCellEditingStyle.Delete {
+            
         // ローカル通知をキャンセルする
         let task = taskArray[indexPath.row]
         
@@ -82,7 +79,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 break
             }
         }
+        //データベースから削除する
+        try! realm.write {
+            self.realm.delete(self.taskArray[indexPath.row])
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
+        }
     }
+}
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?){
         let inputViewController:InputViewController = segue.destinationViewController as! InputViewController
