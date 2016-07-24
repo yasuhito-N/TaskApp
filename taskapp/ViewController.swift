@@ -10,17 +10,25 @@ import UIKit
 import RealmSwift
 
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     let realm = try! Realm()
-    
     let taskArray = try! Realm().objects(Task).sorted("date", ascending: false)
+//    //Taskの情報を保持し操作する
+//    var taskProvider:TaskProvider = TaskProvider.sharedManager
+//    //Categoryの情報を保持し操作する
+//    var categoryProvider:CategoryProvider = CategoryProvider.sharedManager
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        self.searchBar.delegate = self
+        self.searchBar.showsCancelButton = true
+    
     }
 
     override func didReceiveMemoryWarning() {
@@ -109,6 +117,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewWillAppear(animated)
         tableView.reloadData()
     }
+    
+//    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+//        categoryProvider.selectByTitle(searchBar.text!)
+//        if categoryProvider.getRecordCount() != 0 {
+//            let searchedCategoryObj = categoryProvider.getRecord(0) as! Category
+//            taskProvider.selectByCategory(searchedCategoryObj.id)
+//        } else {
+//            taskProvider.evacuateRecord()
+//        }
+//        self.tableView.reloadData()
+//    }
 
 }
 
